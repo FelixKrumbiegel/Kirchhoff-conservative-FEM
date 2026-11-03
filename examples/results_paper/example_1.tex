@@ -1,0 +1,206 @@
+% Example 1: spatial convergence (lambda = 1, 3) and temporal convergence (lambda = 1).
+%
+\documentclass{standalone}
+
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\pgfplotsset{
+    legend image code/.code={
+        \draw[#1] (0cm,0cm) -- (1.2cm,0cm);
+    }
+}
+
+\begin{document}
+
+\pgfplotscreateplotcyclelist{rates}{%
+violet,ultra thick,densely dotted,every mark/.append style={fill=white,solid},mark=*,mark size=4\\%
+darkcoral,ultra thick,dashed,every mark/.append style={fill=white,solid},mark=square*,mark size=4\\%
+cyan,ultra thick,solid,every mark/.append style={fill=white,solid},mark=triangle*,mark size=6\\%
+}
+
+\begin{tikzpicture}
+
+\definecolor{darkgray176}{RGB}{176,176,176}
+\definecolor{green01270}{RGB}{0,127,0}
+\definecolor{darkcoral}{rgb}{0.8, 0.36, 0.27}
+\definecolor{amber}{rgb}{1.0, 0.75, 0.0}
+
+\begin{scope}[shift={(0cm,0cm)}]
+\begin{axis}[
+cycle multi list={rates},
+title={{\Large $\lambda=1$}},
+width=7.4cm,
+height=5.4cm,
+axis line style=very thick,
+log basis x={10},
+log basis y={10},
+tick align=center,
+tick pos=left,
+legend columns=1,
+legend style={/tikz/column 2/.style={column sep=7pt,},},
+legend pos=south east,
+xlabel={{\Large mesh size $h$}},
+x label style={at={(axis description cs:0.5,-0.15)},anchor=north},
+x grid style={darkgray176},
+xmin=0.0135, xmax=0.29,
+xmode=log,
+xtick style={color=black},
+xtick={0.5,0.25,0.125,0.0625,0.03125,0.015625},
+xticklabels={
+  \(\displaystyle {2^{-1}}\),
+  \(\displaystyle {2^{-2}}\),
+  \(\displaystyle {2^{-3}}\),
+  \(\displaystyle {2^{-4}}\),
+  \(\displaystyle {2^{-5}}\),
+  \(\displaystyle {2^{-6}}\)
+},
+ylabel={{\Large rel. $L^2$ error at $T$}},
+y label style={at={(axis description cs:-0.16,0.5)},anchor=south},
+y grid style={darkgray176},
+ymin=5e-09, ymax=3,
+ymode=log,
+ytick style={color=black},
+ytick={1e0,1e-2,1e-4,1e-6,1e-8},
+yticklabels={
+  \(\displaystyle {10^{0}}\),
+  \(\displaystyle {10^{-2}}\),
+  \(\displaystyle {10^{-4}}\),
+  \(\displaystyle {10^{-6}}\),
+  \(\displaystyle {10^{-8}}\),
+}
+]
+\addlegendimage{violet,ultra thick,densely dotted,every mark/.append style={fill=white,solid},mark=*,mark size=3}\addlegendentry{{$p=1$}}
+\addlegendimage{darkcoral,ultra thick,dashed,every mark/.append style={fill=white,solid},mark=square*,mark size=3}\addlegendentry{{$p=2$}}
+\addlegendimage{cyan,ultra thick,solid,every mark/.append style={fill=white,solid},mark=triangle*,mark size=5}\addlegendentry{{$p=3$}}
+\addplot table[x=H,y=p1,col sep=comma]{./errors_space_relative_L2_ex11.csv};
+\addplot table[x=H,y=p2,col sep=comma]{./errors_space_relative_L2_ex11.csv};
+\addplot table[x=H,y=p3,col sep=comma]{./errors_space_relative_L2_ex11.csv};
+\addplot [very thick, black, dashed]
+table {% order 2
+  0.25 0.3220905401796712
+  0.015625 0.0012581661725768406
+};
+\addplot [very thick, black, dashed]
+table {% order 3
+  0.25 0.021452570176854605
+  0.015625 5.237443890833644e-06
+};
+\addplot [very thick, black, dashed]
+table {% order 4
+  0.25 0.0017458057898824683
+  0.015625 2.663888229190778e-08
+};
+\end{axis}
+\end{scope}
+
+\begin{scope}[shift={(6.4cm,0cm)}]
+\begin{axis}[
+cycle multi list={rates},
+title={{\Large $\lambda=3$}},
+width=7.4cm,
+height=5.4cm,
+axis line style=very thick,
+log basis x={10},
+log basis y={10},
+tick align=center,
+tick pos=left,
+legend columns=1,
+legend style={/tikz/column 2/.style={column sep=7pt,},},
+legend pos=south east,
+xlabel={{\Large mesh size $h$}},
+x label style={at={(axis description cs:0.5,-0.15)},anchor=north},
+x grid style={darkgray176},
+xmin=0.0135, xmax=0.29,
+xmode=log,
+xtick style={color=black},
+xtick={0.5,0.25,0.125,0.0625,0.03125,0.015625},
+xticklabels={
+  \(\displaystyle {2^{-1}}\),
+  \(\displaystyle {2^{-2}}\),
+  \(\displaystyle {2^{-3}}\),
+  \(\displaystyle {2^{-4}}\),
+  \(\displaystyle {2^{-5}}\),
+  \(\displaystyle {2^{-6}}\)
+},
+y label style={at={(axis description cs:-0.09,0.5)},anchor=south},
+y grid style={darkgray176},
+ymin=5e-09, ymax=3,
+ymode=log,
+ytick style={color=black},
+ytick={1e0,1e-2,1e-4,1e-6,1e-8},
+yticklabels={}
+]
+\addlegendimage{no markers,black,thick,dashed}\addlegendentry{{\large $\mathcal{O}(h^2)$}}
+\addlegendimage{no markers,black,thick,dashed}\addlegendentry{{\large $\mathcal{O}(h^3)$}}
+\addlegendimage{no markers,black,thick,dashed}\addlegendentry{{\large $\mathcal{O}(h^4)$}}
+\addplot table[x=H,y=p1,col sep=comma]{./errors_space_relative_L2_ex13.csv};
+\addplot table[x=H,y=p2,col sep=comma]{./errors_space_relative_L2_ex13.csv};
+\addplot table[x=H,y=p3,col sep=comma]{./errors_space_relative_L2_ex13.csv};
+\addplot [very thick, black, dashed]
+table {% order 2
+  0.25 2.0353703776881766
+  0.015625 0.00795066553784444
+};
+\addplot [very thick, black, dashed]
+table {% order 3
+  0.25 0.49952605972614805
+  0.015625 0.00012195460442532911
+};
+\addplot [very thick, black, dashed]
+table {% order 4
+  0.25 0.12463209051370387
+  0.015625 1.9017347795670146e-06
+};
+\end{axis}
+\end{scope}
+
+\begin{scope}[shift={(0cm,-6.8cm)}]
+\begin{axis}[
+title={{\Large $\lambda=1$}},
+width=13.8cm,
+height=5.4cm,
+axis line style=very thick,
+log basis x={10},
+log basis y={10},
+tick align=center,
+tick pos=left,
+legend columns=1,
+legend style={/tikz/column 2/.style={column sep=7pt,},},
+legend pos=south east,
+xlabel={{\Large time step size $\tau$}},
+x label style={at={(axis description cs:0.5,-0.15)},anchor=north},
+x grid style={darkgray176},
+xmin=0.0003, xmax=0.004,
+xmode=log,
+xtick style={color=black},
+xtick={0.0030679615757712823,0.0015339807878856412,0.0007669903939428206,0.0003834951969714103},
+xticklabels={
+  \(\displaystyle {\tfrac\pi{2}\cdot2^{-9}}\),
+  \(\displaystyle {\tfrac\pi{2}\cdot2^{-10}}\),
+  \(\displaystyle {\tfrac\pi{2}\cdot2^{-11}}\),
+  \(\displaystyle {\tfrac\pi{2}\cdot2^{-12}}\)
+},
+ylabel={{\Large rel. $L^2$ error at $T$}},
+y label style={at={(axis description cs:-0.09,0.5)},anchor=south},
+y grid style={darkgray176},
+ymin=8e-09, ymax=2.5e-06,
+ymode=log,
+ytick style={color=black},
+]
+\addlegendimage{amber,ultra thick,solid,every mark/.append style={fill=white,solid},mark=*,mark size=3}\addlegendentry{{$p=3,\ h=2^{-6}$}}
+\addlegendimage{no markers,black,thick,dashed}\addlegendentry{{\large $\mathcal{O}(\tau^2)$}}
+\addplot [amber,ultra thick,solid,every mark/.append style={fill=white,solid},mark=*,mark size=4]
+  table[x=tau,y=error,col sep=comma]{./errors_time_relative_L2_ex11.csv};
+\addplot [very thick, black, dashed]
+table {% order 2
+  0.0030679615757712823 1.8369846511617433e-06
+  0.0003834951969714103 2.870288517440224e-08
+};
+\end{axis}
+\end{scope}
+
+\end{tikzpicture}
+
+\end{document}

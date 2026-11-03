@@ -1,0 +1,151 @@
+% Example 5 -- the discrete energy.
+%   left:  conservation,  relative drift of E_h^{n;gamma} over [0,200 pi]
+%          at theta = 1/2 for gamma = 1/4 and gamma = 1/2
+%   right: convergence,   spread of E_h^{n;gamma} against tau
+%          at gamma = 1/2 for theta = 1/4 and theta = 1/2
+%
+\documentclass{standalone}
+
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\pgfplotsset{
+    legend image code/.code={
+        \draw[#1] (0cm,0cm) -- (1.2cm,0cm);
+    }
+}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+\definecolor{darkgray176}{RGB}{176,176,176}
+\definecolor{darkcoral}{rgb}{0.8, 0.36, 0.27}
+\definecolor{amber}{rgb}{1.0, 0.75, 0.0}
+
+% ======================================================== left: conservation in time
+\begin{scope}[shift={(0cm,0cm)}]
+\begin{axis}[
+title={{\Large conservation, $\theta=\tfrac12$}},
+width=7.8cm,
+height=5.4cm,
+axis line style=very thick,
+log basis x={10},
+log basis y={10},
+tick align=center,
+tick pos=left,
+legend columns=1,
+legend style={/tikz/column 2/.style={column sep=7pt,}, font=\large},
+legend pos=south east,
+xlabel={{\Large time $t$}},
+x label style={at={(axis description cs:0.5,-0.15)},anchor=north},
+x grid style={darkgray176},
+xmin=3e-3, xmax=1.5e3,
+xmode=log,
+xtick style={color=black},
+xtick={1e-2,1e-1,1e0,1e1,1e2,1e3},
+xticklabels={
+  \(\displaystyle {10^{-2}}\),
+  \(\displaystyle {10^{-1}}\),
+  \(\displaystyle {10^{0}}\),
+  \(\displaystyle {10^{1}}\),
+  \(\displaystyle {10^{2}}\),
+  \(\displaystyle {10^{3}}\),
+},
+ylabel={{\Large rel. drift of $\mathcal{E}_h^{n;\gamma}$}},
+y label style={at={(axis description cs:-0.15,0.5)},anchor=south},
+y grid style={darkgray176},
+ymin=1e-15, ymax=1e-5,
+ymode=log,
+ytick style={color=black},
+ytick={1e-15,1e-13,1e-11,1e-9,1e-7,1e-5},
+yticklabels={
+  \(\displaystyle {10^{-15}}\),
+  \(\displaystyle {10^{-13}}\),
+  \(\displaystyle {10^{-11}}\),
+  \(\displaystyle {10^{-9}}\),
+  \(\displaystyle {10^{-7}}\),
+  \(\displaystyle {10^{-5}}\),
+}
+]
+
+\addlegendimage{amber,ultra thick,solid}\addlegendentry{$\gamma=\tfrac12$}
+\addlegendimage{darkcoral,ultra thick,solid}\addlegendentry{$\gamma=\tfrac14$}
+\addlegendimage{no markers,black,thick,dashed}\addlegendentry{$\mathcal{O}(t)$}
+
+\addplot [amber, ultra thick, solid] table[x=t,y=drift,col sep=comma]
+  {./energy_drift_gamma05.csv};
+
+\addplot [darkcoral, ultra thick, solid] table[x=t,y=drift,col sep=comma]
+  {./energy_drift_gamma025.csv};
+
+\addplot [very thick, black, dashed] coordinates {(1e-2, 3.5e-11) (1e3, 3.5e-6)};
+
+\end{axis}
+\end{scope}
+
+% ======================================================= right: convergence in tau
+\begin{scope}[shift={(9.1cm,0cm)}]
+\begin{axis}[
+title={{\Large convergence, $\gamma=\tfrac12$}},
+width=7.8cm,
+height=5.4cm,
+axis line style=very thick,
+log basis x={10},
+log basis y={10},
+tick align=center,
+tick pos=left,
+legend columns=1,
+legend style={/tikz/column 2/.style={column sep=7pt,}, font=\large},
+legend pos=north west,
+xlabel={{\Large time step size $\tau$}},
+x label style={at={(axis description cs:0.5,-0.15)},anchor=north},
+x grid style={darkgray176},
+xmin=3.0e-4, xmax=4.0e-3,
+xmode=log,
+xtick style={color=black},
+xtick={0.003067961572265625,0.0015339807861328126,0.0007669903930664063,0.00038349519653320315},
+xticklabels={
+  \(\displaystyle {2\pi\cdot2^{-11}}\),
+  \(\displaystyle {2\pi\cdot2^{-12}}\),
+  \(\displaystyle {2\pi\cdot2^{-13}}\),
+  \(\displaystyle {2\pi\cdot2^{-14}}\),
+},
+ylabel={{\Large rel. spread of $\mathcal{E}_h^{n;\gamma}$}},
+y label style={at={(axis description cs:-0.15,0.5)},anchor=south},
+y grid style={darkgray176},
+ymin=3e-9, ymax=3e-4,
+ymode=log,
+ytick style={color=black},
+ytick={1e-9,1e-7,1e-5,1e-3},
+yticklabels={
+  \(\displaystyle {10^{-9}}\),
+  \(\displaystyle {10^{-7}}\),
+  \(\displaystyle {10^{-5}}\),
+  \(\displaystyle {10^{-3}}\),
+}
+]
+
+\addlegendimage{darkcoral,ultra thick,dashed,every mark/.append style={fill=white,solid},mark=square*,mark size=3}\addlegendentry{$\theta=\tfrac14$}
+\addlegendimage{amber,ultra thick,solid,every mark/.append style={fill=white,solid},mark=*,mark size=3}\addlegendentry{$\theta=\tfrac12$}
+\addlegendimage{no markers,black,thick,dashed}\addlegendentry{$\mathcal{O}(\tau^2)$}
+
+\addplot [darkcoral,ultra thick,dashed,every mark/.append style={fill=white,solid},mark=square*,mark size=4]
+  table[x=tau,y=spread,col sep=comma]{./energy_spread_theta025.csv};
+
+\addplot [amber,ultra thick,solid,every mark/.append style={fill=white,solid},mark=*,mark size=4]
+  table[x=tau,y=spread,col sep=comma]{./energy_spread_theta05.csv};
+
+\addplot [very thick, black, dashed]
+table {% order 2
+  0.003067961572265625 0.00013
+  0.00038349519653320315 2.03125e-06
+};
+
+\end{axis}
+\end{scope}
+
+\end{tikzpicture}
+
+\end{document}

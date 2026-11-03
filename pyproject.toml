@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=80.9.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kirchhoff"
+version = "1.0.0"
+authors = [
+  { name="Felix Krumbiegel", email="felix.krumbiegel@uni-saarland.de" },
+]
+description = "Continuous FEM solver for a second-order non-linear Kirchhoff-type PDE using Picard iteration"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+
+# Recorded for provenance, not for pip to resolve:
+dependencies = [
+  "fenics-dolfinx==0.11.0",
+  "mpi4py==4.1.2",
+  "numpy==2.5.2",
+  "petsc4py==3.25.4",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
